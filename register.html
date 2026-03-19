@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServidorAPP – Crear Cuenta</title>
+    <meta name="description" content="Crea tu cuenta en ServidorAPP para gestionar tus carpetas de forma segura.">
+    <link rel="icon" href="assets/icono.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/modals.css">
+    <style>
+        /* ============================
+           REGISTER PRO — Estilos exclusivos
+           ============================ */
+        :root {
+            --login-bg-from:      #0a0e27;
+            --login-bg-to:        #0d1b4b;
+            --login-card-bg:      rgba(255, 255, 255, 0.04);
+            --login-border:       rgba(255, 255, 255, 0.12);
+            --login-accent:       #4f8ef7;
+            --login-accent2:      #a855f7;
+            --login-text:         #e2e8f0;
+            --login-muted:        rgba(226, 232, 240, 0.55);
+            --login-input-bg:     rgba(255, 255, 255, 0.07);
+            --login-input-border: rgba(255, 255, 255, 0.15);
+            --login-input-focus:  rgba(79, 142, 247, 0.5);
+            --font: 'Inter', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background: var(--login-bg-from);
+        }
+
+        /* ---- Fondo animado ---- */
+        .login-scene {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at 20% 50%, rgba(79, 142, 247, 0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(168, 85, 247, 0.12) 0%, transparent 55%),
+                linear-gradient(135deg, var(--login-bg-from) 0%, var(--login-bg-to) 100%);
+            overflow: hidden;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.55;
+            animation: floatOrb 12s ease-in-out infinite;
+        }
+        .orb-1 { width: 420px; height: 420px; background: rgba(79, 142, 247, 0.35); top: -100px; left: -80px; animation-delay: 0s; }
+        .orb-2 { width: 320px; height: 320px; background: rgba(168, 85, 247, 0.3); bottom: -60px; right: -60px; animation-delay: -4s; }
+        .orb-3 { width: 200px; height: 200px; background: rgba(79, 142, 247, 0.2); top: 60%; left: 60%; animation-delay: -8s; }
+
+        @keyframes floatOrb {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -20px) scale(1.05); }
+            66% { transform: translate(-20px, 15px) scale(0.97); }
+        }
+
+        .dot-grid {
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+
+        /* ---- Wrapper ---- */
+        .login-wrapper {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        /* ---- Tarjeta ---- */
+        .login-card {
+            width: 100%;
+            max-width: 440px;
+            background: var(--login-card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--login-border);
+            border-radius: 24px;
+            padding: 44px 40px 36px;
+            box-shadow: 0 4px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(28px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ---- Branding ---- */
+        .login-brand {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .login-brand-icon {
+            width: 58px;
+            height: 58px;
+            background: linear-gradient(135deg, var(--login-accent), var(--login-accent2));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 14px;
+            box-shadow: 0 8px 24px rgba(79, 142, 247, 0.45);
+        }
+
+        .login-app-name {
+            font-size: 20px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .login-app-sub {
+            font-size: 13px;
+            color: var(--login-muted);
+            margin-top: 3px;
+        }
+
+        /* ---- Campos ---- */
+        .field { margin-bottom: 14px; }
+
+        .field label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--login-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 7px;
+        }
+
+        .field-wrap { position: relative; }
+
+        .field-icon {
+            position: absolute;
+            left: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--login-muted);
+            pointer-events: none;
+            transition: color 0.25s;
+            display: flex;
+        }
+
+        .field-wrap input {
+            width: 100%;
+            padding: 12px 13px 12px 42px;
+            background: var(--login-input-bg);
+            border: 1px solid var(--login-input-border);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 14px;
+            font-family: var(--font);
+            outline: none;
+            transition: border-color 0.25s, box-shadow 0.25s;
+            caret-color: var(--login-accent);
+        }
+
+        .field-wrap input::placeholder { color: rgba(255, 255, 255, 0.22); }
+
+        .field-wrap input:focus {
+            border-color: var(--login-accent);
+            box-shadow: 0 0 0 3px var(--login-input-focus);
+        }
+
+        .field-wrap:focus-within .field-icon { color: var(--login-accent); }
+
+        /* Toggle contraseña */
+        .field-icon-right {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--login-muted);
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 4px;
+            border-radius: 6px;
+            display: flex;
+            transition: color 0.25s;
+        }
+        .field-icon-right:hover { color: var(--login-accent); }
+
+        /* Campo con toggle: padding derecho extra */
+        .field-wrap.has-toggle input { padding-right: 42px; }
+
+        /* Badge "Opcional" */
+        .badge-optional {
+            font-size: 10px;
+            font-weight: 500;
+            padding: 2px 7px;
+            border-radius: 20px;
+            background: rgba(79, 142, 247, 0.18);
+            color: var(--login-accent);
+            margin-left: 4px;
+        }
+
+        /* ---- Botón ---- */
+        .btn-register-pro {
+            width: 100%;
+            padding: 13px;
+            margin-top: 6px;
+            background: linear-gradient(135deg, var(--login-accent) 0%, var(--login-accent2) 100%);
+            color: #fff;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: var(--font);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.25s;
+            box-shadow: 0 6px 22px rgba(79, 142, 247, 0.45);
+        }
+
+        .btn-register-pro::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--login-accent2), var(--login-accent));
+            opacity: 0;
+            transition: opacity 0.35s;
+        }
+        .btn-register-pro:hover::before { opacity: 1; }
+        .btn-register-pro span, .btn-register-pro svg { position: relative; z-index: 1; }
+
+        .btn-register-pro:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(79, 142, 247, 0.55);
+        }
+        .btn-register-pro:active { transform: translateY(1px); }
+        .btn-register-pro.loading { pointer-events: none; opacity: 0.75; }
+
+        /* ---- Footer card ---- */
+        .login-card-footer {
+            margin-top: 22px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--login-muted);
+        }
+
+        .login-card-footer a {
+            color: var(--login-accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .login-card-footer a:hover { text-decoration: underline; }
+
+        /* ---- Modal de carpetas ---- */
+        .folder-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(4px);
+            z-index: 500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .folder-modal-overlay.active { display: flex; }
+
+        .folder-modal-card {
+            background: #131932;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            padding: 36px 32px 28px;
+            max-width: 380px;
+            width: 92%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .folder-modal-icon {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, var(--login-accent), var(--login-accent2));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .folder-modal-card h3 {
+            color: #fff;
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .folder-modal-card p {
+            color: var(--login-muted);
+            font-size: 13px;
+            margin-bottom: 24px;
+        }
+
+        .folder-options {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+        }
+
+        .btn-folder-pro {
+            flex: 1;
+            padding: 16px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            color: var(--login-text);
+            font-family: var(--font);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.25s;
+        }
+
+        .btn-folder-pro:hover {
+            background: rgba(79, 142, 247, 0.15);
+            border-color: var(--login-accent);
+            transform: translateY(-2px);
+            color: #fff;
+        }
+
+        .btn-folder-pro svg { color: var(--login-accent); }
+
+        /* ---- Badges de seguridad ---- */
+        .security-badges {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+        .badge {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .login-card { padding: 30px 18px 26px; }
+            .folder-options { flex-direction: column; }
+            .login-wrapper {
+                padding: 16px;
+                align-items: flex-start;
+                padding-top: 40px;
+            }
+            .login-app-name { font-size: 18px; }
+            .security-badges { gap: 10px; }
+        }
+
+        @media (max-width: 360px) {
+            .login-card {
+                padding: 26px 14px 22px;
+                border-radius: 18px;
+            }
+            .security-badges {
+                flex-direction: column;
+                gap: 6px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Fondo animado -->
+    <div class="login-scene">
+        <div class="dot-grid"></div>
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Formulario -->
+    <div class="login-wrapper">
+        <div class="login-card">
+
+            <!-- Branding -->
+            <div class="login-brand">
+                <div class="login-brand-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <line x1="19" y1="8" x2="19" y2="14"/>
+                        <line x1="22" y1="11" x2="16" y2="11"/>
+                    </svg>
+                </div>
+                <div class="login-app-name">ServidorAPP</div>
+                <div class="login-app-sub">Crear nueva cuenta</div>
+            </div>
+
+            <form id="registerForm">
+
+                <!-- Usuario -->
+                <div class="field">
+                    <label for="username">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        Usuario
+                    </label>
+                    <div class="field-wrap">
+                        <svg class="field-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        <input type="text" id="username" name="username" placeholder="Elegí tu nombre de usuario" autocomplete="username" required>
+                    </div>
+                </div>
+
+                <!-- Contraseña -->
+                <div class="field">
+                    <label for="regPassword">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        Contraseña
+                    </label>
+                    <div class="field-wrap has-toggle">
+                        <svg class="field-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        <input type="password" id="regPassword" name="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password" required>
+                        <button type="button" class="field-icon-right" id="toggleRegPassword" aria-label="Mostrar contraseña">
+                            <svg id="eyeIcon1" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Confirmar contraseña -->
+                <div class="field">
+                    <label for="confirmPassword">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                        Confirmar Contraseña
+                    </label>
+                    <div class="field-wrap has-toggle">
+                        <svg class="field-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Repetí tu contraseña" autocomplete="new-password" required>
+                        <button type="button" class="field-icon-right" id="toggleConfirmPassword" aria-label="Mostrar contraseña">
+                            <svg id="eyeIcon2" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Clave de Administrador -->
+                <div class="field">
+                    <label for="adminKey">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+                        Clave de Administrador
+                        <span class="badge-optional">Opcional</span>
+                    </label>
+                    <div class="field-wrap has-toggle">
+                        <svg class="field-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+                        <input type="password" id="adminKey" name="adminKey" placeholder="Solo si sos administrador">
+                        <button type="button" class="field-icon-right" id="toggleAdminKey" aria-label="Mostrar clave admin">
+                            <svg id="eyeIcon3" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Botón -->
+                <button type="submit" class="btn-register-pro" id="registerBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <line x1="19" y1="8" x2="19" y2="14"/>
+                        <line x1="22" y1="11" x2="16" y2="11"/>
+                    </svg>
+                    <span>Crear Cuenta</span>
+                </button>
+
+            </form>
+
+            <!-- Link de login -->
+            <div class="login-card-footer">
+                ¿Ya tenés cuenta? <a href="login.html">Iniciar sesión</a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Pie de pantalla fijo -->
+    <div style="position:fixed; bottom:20px; left:0; right:0; z-index:20; text-align:center;">
+        <p style="font-size:12px; color:rgba(255,255,255,0.35); margin-bottom:10px; letter-spacing:0.3px;">
+            Desarrollado por <strong style="color:rgba(255,255,255,0.55); font-weight:600;">Alejandro Bajuk</strong>
+        </p>
+        <div class="security-badges">
+            <div class="badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Conexión cifrada
+            </div>
+            <div class="badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Autenticación JWT
+            </div>
+            <div class="badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                Acceso privado
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Seleccionar Carpeta (Admin) -->
+    <div id="selectFolderOverlay" class="folder-modal-overlay">
+        <div class="folder-modal-card">
+            <div class="folder-modal-icon">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                </svg>
+            </div>
+            <h3>Carpeta asignada</h3>
+            <p>Elegí la carpeta a la que este usuario tendrá acceso:</p>
+            <div class="folder-options">
+                <button type="button" class="btn-folder-pro" onclick="selectFolder('ari')">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    Carpeta Ari
+                </button>
+                <button type="button" class="btn-folder-pro" onclick="selectFolder('ruth')">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    Carpeta Ruth
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Personalizado (Estructura Anidada Profesional) -->
+    <div id="modalOverlay" class="modal-overlay">
+        <div id="customModal" class="custom-modal">
+            <div class="modal-content">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div id="modalIcon" class="modal-icon"></div>
+                <h2 id="modalTitle" class="modal-title">Mensaje</h2>
+                <p id="modalMessage" class="modal-message"></p>
+                <div class="modal-actions">
+                    <button id="modalButton" class="btn btn-primary">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/icons.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            setupPasswordToggle('toggleRegPassword',     'regPassword',      'eyeIcon1');
+            setupPasswordToggle('toggleConfirmPassword', 'confirmPassword',  'eyeIcon2');
+            setupPasswordToggle('toggleAdminKey',        'adminKey',         'eyeIcon3');
+            setupRegisterForm();
+        });
+
+        // Modal de selección de carpeta (usado por handleRegister en auth.js)
+        function showFolderModal() {
+            document.getElementById('selectFolderOverlay').classList.add('active');
+        }
+        function hideFolderModal() {
+            document.getElementById('selectFolderOverlay').classList.remove('active');
+        }
+
+        // ---- showError → modal personalizado ----
+        function showError(message) {
+            const btn = document.getElementById('registerBtn');
+            if (btn) {
+                btn.classList.remove('loading');
+                btn.querySelector('span').textContent = 'Crear Cuenta';
+            }
+            showModal(message, 'error', 'Error al registrar');
+        }
+    </script>
+</body>
+</html>

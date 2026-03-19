@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SApp - Error 404 Servidor Desconectado</title>
+    <link rel="icon" href="assets/icono.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/offline.css">
+</head>
+<body>
+    
+    <div class="offline-container">
+        <!-- Tarjeta Central -->
+        <div class="offline-card">
+            
+            <!-- Logo Superior -->
+            <div class="logo-wrapper">
+                <img src="assets/icono.png" alt="SApp Logo" class="app-logo">
+            </div>
+
+            <!-- Animación de Desconexión CSS -->
+            <div class="animation-container">
+                <div class="server-box">
+                    <div class="server-led blink-red"></div>
+                    <div class="server-line"></div>
+                    <div class="server-line"></div>
+                </div>
+                <div class="connection-path">
+                    <div class="broken-link">X</div>
+                </div>
+                <div class="cloud-box">
+                    <svg viewBox="0 0 24 24" width="40" height="40" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="error-badge">ERROR 404 / 503</div>
+            
+            <h1 class="offline-title">Servidor Desconectado</h1>
+            
+            <p class="offline-description">
+                El sistema no puede establecer conexión con el backend de ServidorAPP. 
+                Es probable que el servidor esté apagado, reiniciándose, o haya un problema de red local.
+            </p>
+            
+            <div class="status-indicator">
+                <span class="status-dot"></span>
+                <span id="statusText">Esperando conexión...</span>
+            </div>
+
+            <button id="btnDetect" class="btn-detect">
+                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+                Detectar Servidor
+            </button>
+            
+        </div>
+    </div>
+
+    <script src="js/offline.js"></script>
+
+</body>
+</html>

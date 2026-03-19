@@ -1,0 +1,343 @@
+/* ============================================================
+   ServidorAPP - SISTEMA DE VISTA PREVIA (Pro Edition)
+   ============================================================ */
+
+.preview-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(0, 0, 0, 0.85) !important;
+    z-index: 200000 !important;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+}
+
+.preview-overlay.show {
+    display: block !important;
+    opacity: 1 !important;
+}
+
+.preview-modal {
+    position: fixed !important;
+    top: 2% !important;
+    left: 2% !important;
+    right: 2% !important;
+    bottom: 2% !important;
+    background: #131932 !important;
+    border-radius: 16px !important;
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.6) !important;
+    z-index: 200001 !important;
+    display: none;
+    flex-direction: column;
+    opacity: 0;
+    transform: scale(0.98);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.preview-modal.show {
+    display: flex !important;
+    opacity: 1 !important;
+    transform: scale(1) !important;
+}
+
+.preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    flex-shrink: 0;
+}
+
+.preview-header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-width: 0;
+}
+
+.preview-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+}
+
+.preview-file-icon {
+    color: #4f8ef7;
+    display: flex;
+}
+
+.preview-header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+/* Botones de acción en vista previa */
+.btn-preview-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-preview-action:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-preview-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    background: rgba(231, 76, 60, 0.1);
+    border: 1px solid rgba(231, 76, 60, 0.2);
+    border-radius: 8px;
+    color: #ff5e57;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-preview-close:hover {
+    background: #e74c3c;
+    color: #fff;
+    transform: rotate(90deg);
+}
+
+.preview-body {
+    flex: 1;
+    overflow: auto;
+    background: #0a0e27;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* Loading spinner */
+.preview-loading {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 14px;
+}
+
+/* Contenido específico de visualizadores */
+.preview-image img {
+    max-width: 95%;
+    max-height: 95%;
+    object-fit: contain;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.preview-video video {
+    max-width: 100%;
+    max-height: 100%;
+    background: #000;
+}
+
+.preview-text {
+    width: 100%;
+    height: 100%;
+    padding: 30px;
+    overflow: auto;
+}
+
+.preview-text pre {
+    color: #cdd6f4;
+    font-family: 'Cascadia Code', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.preview-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #fff;
+}
+
+/* Tablas Admin y Menú Contextual (Portados para coherencia) */
+.context-menu {
+    position: fixed;
+    z-index: 2000;
+    background: #1c223c;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    min-width: 180px;
+    padding: 6px;
+    display: none;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: all 0.15s ease;
+}
+
+.context-menu.show {
+    display: block;
+    opacity: 1;
+    transform: scale(1);
+}
+
+.ctx-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.ctx-item:hover {
+    background: rgba(79, 142, 247, 0.15);
+    color: #4f8ef7;
+}
+
+.ctx-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 4px 0;
+}
+
+/* ============================================================
+   ESTILOS DEL EDITOR (Quill & Plain Text)
+   ============================================================ */
+
+.quill-editor-container {
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    color: #333;
+}
+
+/* Personalización de la barra de Quill para que no desentone tanto */
+.ql-toolbar.ql-snow {
+    border: none !important;
+    border-bottom: 1px solid #ddd !important;
+    background: #f8f9fa !important;
+    padding: 10px 20px !important;
+}
+
+.ql-container.ql-snow {
+    border: none !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 16px !important;
+}
+
+.preview-textarea {
+    width: 100%;
+    height: 100%;
+    background: #0d122b;
+    color: #cdd6f4;
+    border: none;
+    padding: 30px;
+    font-family: 'Cascadia Code', monospace;
+    font-size: 15px;
+    line-height: 1.6;
+    outline: none;
+    resize: none;
+}
+
+/* Botones especiales de vista previa */
+.btn-preview-save {
+    background: #2ecc71 !important;
+    border-color: #27ae60 !important;
+}
+.btn-preview-save:hover {
+    background: #27ae60 !important;
+}
+
+.btn-preview-cancel {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* ============================================================
+   RESPONSIVE - Vista Previa en Móvil
+   ============================================================ */
+@media (max-width: 768px) {
+    .preview-modal {
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        border-radius: 0 !important;
+    }
+
+    .preview-header {
+        padding: 12px 14px;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .preview-header-left {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .preview-title {
+        font-size: 14px;
+    }
+
+    .preview-header-right {
+        gap: 5px;
+        flex-wrap: wrap;
+    }
+
+    .btn-preview-action {
+        padding: 7px 10px;
+        font-size: 12px;
+        gap: 4px;
+    }
+
+    .preview-text {
+        padding: 16px;
+    }
+
+    .preview-textarea {
+        padding: 16px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .preview-header {
+        padding: 10px 12px;
+    }
+
+    .btn-preview-action {
+        padding: 6px 8px;
+        font-size: 11px;
+    }
+
+    .preview-file-icon svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .preview-header-right {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}

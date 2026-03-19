@@ -1,0 +1,136 @@
+/* ============================================================
+   ServidorAPP - SENSOR DE INACTIVIDAD (CSS)
+   ============================================================ */
+
+/* Overlay a pantalla completa */
+.inactivity-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(10, 15, 30, 0.96);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s ease-in-out;
+}
+
+.inactivity-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Tarjeta Modal */
+.inactivity-card {
+    background: #11182A;
+    border: 1px solid rgba(241, 196, 15, 0.2);
+    border-radius: 20px;
+    padding: 40px 30px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), inset 0 2px 10px rgba(255, 255, 255, 0.05);
+    transform: translateY(30px) scale(0.95);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.inactivity-overlay.show .inactivity-card {
+    transform: translateY(0) scale(1);
+}
+
+/* Icono Principal */
+.ina-icon-container {
+    width: 70px;
+    height: 70px;
+    background: rgba(241, 196, 15, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px auto;
+    color: #f1c40f;
+    box-shadow: 0 0 15px rgba(241, 196, 15, 0.3);
+    animation: pulseIcon 2s infinite;
+}
+
+@keyframes pulseIcon {
+    0% { transform: scale(1); box-shadow: 0 0 15px rgba(241, 196, 15, 0.3); }
+    50% { transform: scale(1.05); box-shadow: 0 0 25px rgba(241, 196, 15, 0.6); }
+    100% { transform: scale(1); box-shadow: 0 0 15px rgba(241, 196, 15, 0.3); }
+}
+
+/* Textos */
+.ina-title {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 15px;
+}
+
+.ina-text {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.ina-subtext {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+    margin-bottom: 25px;
+}
+
+/* Reloj Digital */
+.ina-timer-wrapper {
+    background: #000;
+    border: 2px solid rgba(241, 196, 15, 0.3);
+    border-radius: 12px;
+    padding: 15px;
+    display: inline-block;
+    margin-bottom: 20px;
+    box-shadow: inset 0 0 15px rgba(241, 196, 15, 0.1);
+}
+
+.ina-timer {
+    font-family: monospace, monospace;
+    font-size: 38px;
+    font-weight: 700;
+    color: #f1c40f;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(241, 196, 15, 0.6);
+}
+
+/* Red timer (Últimos segundos) */
+.ina-timer-wrapper.danger {
+    border-color: rgba(255, 71, 87, 0.5);
+    box-shadow: inset 0 0 20px rgba(255, 71, 87, 0.3);
+}
+
+.ina-timer-wrapper.danger .ina-timer {
+    color: #ff4757;
+    text-shadow: 0 0 10px rgba(255, 71, 87, 0.6);
+    animation: flashRed 1s infinite alternate;
+}
+
+@keyframes flashRed {
+    from { opacity: 1; }
+    to { opacity: 0.5; }
+}
+
+/* Botón Action */
+.ina-btn {
+    width: 100% !important;
+    background: linear-gradient(135deg, #f1c40f 0%, #d4ac0d 100%) !important;
+    color: #000 !important;
+    box-shadow: 0 8px 25px rgba(241, 196, 15, 0.3) !important;
+}
+
+.ina-btn:hover {
+    box-shadow: 0 12px 35px rgba(241, 196, 15, 0.5) !important;
+}

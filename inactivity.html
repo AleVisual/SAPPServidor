@@ -1,0 +1,29 @@
+<div id="inactivityOverlay" class="inactivity-overlay">
+    <div class="inactivity-card">
+        <div class="ina-icon-container">
+            <!-- Reloj de advertencia SVG -->
+            <svg viewBox="0 0 24 24" width="50" height="50" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="ina-svg">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+        </div>
+        
+        <h2 class="ina-title">Aviso de Seguridad</h2>
+        
+        <p class="ina-text">
+            No detectamos actividad en los últimos <strong>10 minutos</strong>. 
+            Por tu seguridad, la sesión se cerrará automáticamente en:
+        </p>
+
+        <!-- Contador Visual -->
+        <div class="ina-timer-wrapper">
+            <span id="inaTimerDisplay" class="ina-timer">05:00</span>
+        </div>
+
+        <p class="ina-subtext">Hacé clic en el botón inferior para mantener tu sesión abierta.</p>
+
+        <button id="btnKeepSessionAlive" class="btn-modal btn-modal-primary ina-btn">
+            MANTENER SESIÓN
+        </button>
+    </div>
+</div>

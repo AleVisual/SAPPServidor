@@ -1,0 +1,301 @@
+/* ============================================================
+   ServidorAPP - SISTEMA DE MODALES (BLINDAJE DE ALTO NIVEL)
+   Alejandro Bajuk - PRO v5 (Final Unshakeable)
+   ============================================================ */
+
+/* 1. Bloqueo de scroll global */
+body.modal-open {
+    overflow: hidden !important;
+    padding-right: 0 !important;
+}
+
+/* 2. OVERLAY (ID Selector para máxima prioridad) */
+#modalOverlay.modal-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(10, 15, 40, 0.94) !important;
+    backdrop-filter: blur(16px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+    z-index: 2147483647 !important; /* Valor máximo de 32 bits */
+    
+    /* Centrado */
+    display: none !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 24px !important;
+    box-sizing: border-box !important;
+}
+
+/* ACTIVACIÓN DEL OVERLAY */
+#modalOverlay.modal-overlay.show {
+    display: flex !important;
+    opacity: 1 !important;
+}
+
+/* 3. TARJETA DEL MODAL (ID Selector) */
+#customModal.custom-modal {
+    position: relative !important;
+    background: #131932 !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    border-radius: 28px !important;
+    box-shadow: 0 40px 150px rgba(0, 0, 0, 1) !important;
+    width: 100% !important;
+    max-width: 460px;
+    margin: auto !important;
+    overflow: hidden !important;
+    color: #ffffff !important;
+    
+    /* Animación base */
+    transform: translateY(0) !important;
+    opacity: 1 !important; /* Siempre visible si el padre se muestra */
+    display: block !important;
+}
+
+/* Panel admin ancho */
+#customModal.custom-modal.admin-modal {
+    max-width: 780px;
+}
+
+/* 4. CONTENIDO INTERNO */
+.modal-content {
+    padding: 48px 40px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: transparent !important; /* Evita cajas blancas antiguas */
+    text-align: center !important;
+}
+
+.modal-close {
+    position: absolute !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 36px !important;
+    height: 36px !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 12px !important;
+    color: #fff !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 26px !important;
+    z-index: 10 !important;
+}
+
+.modal-close:hover {
+    background: #e74c3c !important;
+    transform: rotate(90deg) scale(1.1) !important;
+}
+
+.modal-title {
+    font-size: 22px !important;
+    font-weight: 800 !important;
+    margin-bottom: 12px !important;
+    color: #fff !important;
+    display: block !important;
+}
+
+.modal-message {
+    font-size: 15px !important;
+    line-height: 1.6 !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+    margin-bottom: 30px !important;
+    display: block !important;
+}
+
+/* 5. TABLA ADMIN (Blindada) */
+.admin-table-container {
+    margin-top: 25px !important;
+    background: rgba(0, 0, 0, 0.4) !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    overflow: hidden !important;
+    width: 100% !important;
+}
+
+.admin-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    color: #fff !important;
+}
+
+.admin-table th {
+    background: rgba(255, 255, 255, 0.05) !important;
+    padding: 15px !important;
+    text-align: left !important;
+    font-size: 11px !important;
+    text-transform: uppercase !important;
+}
+
+.admin-table td {
+    padding: 15px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+/* 6. KILL SCROLLBARS (Definitivo) */
+#modalOverlay.modal-overlay,
+#modalOverlay.modal-overlay * {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+}
+#modalOverlay.modal-overlay *::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+}
+
+/* 7. BOTONES Y ACCIONES PRO (Estética SApp) */
+.modal-actions {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 16px !important;
+    margin-top: 10px !important;
+}
+
+.btn-modal {
+    padding: 14px 44px !important;
+    border-radius: 14px !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    border: none !important;
+    color: #fff !important;
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.8px !important;
+    position: relative !important;
+    min-width: 170px !important;
+}
+
+.btn-modal-primary {
+    background: linear-gradient(135deg, #4f8ef7 0%, #a855f7 100%) !important;
+    box-shadow: 0 8px 25px rgba(79, 142, 247, 0.3) !important;
+}
+
+.btn-modal-primary:hover {
+    transform: translateY(-2px) scale(1.02) !important;
+    box-shadow: 0 12px 35px rgba(79, 142, 247, 0.4) !important;
+}
+
+.btn-modal-danger {
+    background: linear-gradient(135deg, #ff4c4c 0%, #ff8080 100%) !important;
+    box-shadow: 0 8px 25px rgba(255, 76, 76, 0.3) !important;
+}
+
+.btn-modal-danger:hover {
+    transform: translateY(-2px) scale(1.02) !important;
+    box-shadow: 0 12px 35px rgba(255, 76, 76, 0.4) !important;
+}
+
+.btn-modal-secondary {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.btn-modal:active {
+    transform: translateY(1px) scale(0.98) !important;
+}
+
+/* Iconos de modal */
+.modal-icon {
+    display: flex !important;
+    justify-content: center !important;
+    margin-bottom: 24px !important;
+}
+
+.modal-icon-success svg { fill: #2ecc71 !important; filter: drop-shadow(0 0 12px rgba(46, 204, 113, 0.4)); }
+.modal-icon-error svg { fill: #ff4d4d !important; filter: drop-shadow(0 0 12px rgba(255, 77, 77, 0.4)); }
+.modal-icon-warning svg { fill: #f1c40f !important; filter: drop-shadow(0 0 12px rgba(241, 196, 15, 0.4)); }
+.modal-icon-info svg { fill: #4f8ef7 !important; filter: drop-shadow(0 0 12px rgba(79, 142, 247, 0.4)); }
+
+/* 8. BOTÓN ELIMINAR USUARIO (Panel Admin) */
+.btn-delete-user {
+    background: rgba(255, 71, 87, 0.1) !important;
+    border: 1px solid rgba(255, 71, 87, 0.25) !important;
+    color: #ff4757 !important;
+    padding: 8px 14px !important;
+    border-radius: 8px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+    font-family: inherit !important;
+}
+
+.btn-delete-user:hover {
+    background: #ff4757 !important;
+    color: #fff !important;
+    border-color: #ff4757 !important;
+    transform: translateY(-2px) scale(1.02) !important;
+    box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4) !important;
+}
+
+.btn-delete-user:active {
+    transform: translateY(1px) scale(0.95) !important;
+}
+
+.btn-delete-user svg {
+    flex-shrink: 0 !important;
+    stroke-width: 2.5 !important;
+}
+
+/* ============================================================
+   RESPONSIVE - Modales en Móvil
+   ============================================================ */
+@media (max-width: 600px) {
+    #modalOverlay.modal-overlay {
+        padding: 16px !important;
+    }
+
+    #customModal.custom-modal {
+        border-radius: 20px !important;
+    }
+
+    .modal-content {
+        padding: 32px 24px !important;
+    }
+
+    .modal-title {
+        font-size: 19px !important;
+    }
+
+    .modal-message {
+        font-size: 14px !important;
+    }
+
+    .modal-actions {
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+
+    .btn-modal {
+        width: 100% !important;
+        min-width: unset !important;
+        padding: 14px 20px !important;
+    }
+
+    /* Tabla admin responsive */
+    .admin-table-container {
+        overflow-x: auto !important;
+    }
+
+    #customModal.custom-modal.admin-modal {
+        max-width: 100% !important;
+    }
+
+    .admin-table th,
+    .admin-table td {
+        padding: 10px 8px !important;
+        font-size: 12px !important;
+    }
+}

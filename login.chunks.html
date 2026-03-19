@@ -1,0 +1,49 @@
+    <!-- Modal Personalizado (Estructura Anidada Profesional) -->
+    <div id="modalOverlay" class="modal-overlay">
+        <div id="customModal" class="custom-modal">
+            <div class="modal-content">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div id="modalIcon" class="modal-icon"></div>
+                <h2 id="modalTitle" class="modal-title">Mensaje</h2>
+                <div id="modalMessage" class="modal-message"></div>
+                <div class="modal-actions">
+                    <button id="modalButton" class="btn btn-primary" onclick="closeModal()">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts Modulares -->
+    <script src="js/icons.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
+
+    <script>
+        // Configuración de la página de Login
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof setupPasswordToggle === 'function') {
+                setupPasswordToggle('togglePassword', 'password', 'eyeIcon');
+            }
+            if (typeof setupLoginForm === 'function') {
+                setupLoginForm();
+            }
+            if (typeof setupAdminLogic === 'function') {
+                setupAdminLogic();
+            }
+        });
+
+        // Interceptores de UI
+        function showError(message) {
+            const btn = document.getElementById('loginBtn');
+            if (btn) {
+                btn.classList.remove('loading');
+                btn.querySelector('span').textContent = 'Ingresar';
+            }
+            if (typeof showModal === 'function') {
+                showModal(message, 'error', 'Error de inicio de sesión');
+            }
+        }
+    </script>
+</body>
+</html>

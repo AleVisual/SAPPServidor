@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServidorAPP – Iniciar Sesión</title>
+    <meta name="description" content="Accede a tu Gestor de Carpetas ServidorAPP de forma segura.">
+    <link rel="icon" href="assets/icono.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/modals.css">
+    <style>
+        /* ============================
+           LOGIN PRO — Estilos exclusivos
+           ============================ */
+        :root {
+            --login-bg-from: #0a0e27;
+            --login-bg-to: #0d1b4b;
+            --login-card-bg: rgba(255, 255, 255, 0.04);
+            --login-border: rgba(255, 255, 255, 0.12);
+            --login-glow: rgba(99, 179, 237, 0.18);
+            --login-accent: #4f8ef7;
+            --login-accent2: #a855f7;
+            --login-text: #e2e8f0;
+            --login-muted: rgba(226, 232, 240, 0.55);
+            --login-input-bg: rgba(255, 255, 255, 0.07);
+            --login-input-border: rgba(255, 255, 255, 0.15);
+            --login-input-focus: rgba(79, 142, 247, 0.5);
+            --font: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background: var(--login-bg-from);
+        }
+
+        /* ---- Fondo animado con burbujas ---- */
+        .login-scene {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at 20% 50%, rgba(79, 142, 247, 0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(168, 85, 247, 0.12) 0%, transparent 55%),
+                linear-gradient(135deg, var(--login-bg-from) 0%, var(--login-bg-to) 100%);
+            overflow: hidden;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.55;
+            animation: floatOrb 12s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 420px;
+            height: 420px;
+            background: rgba(79, 142, 247, 0.35);
+            top: -100px;
+            left: -80px;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 320px;
+            height: 320px;
+            background: rgba(168, 85, 247, 0.3);
+            bottom: -60px;
+            right: -60px;
+            animation-delay: -4s;
+        }
+
+        .orb-3 {
+            width: 200px;
+            height: 200px;
+            background: rgba(79, 142, 247, 0.2);
+            top: 60%;
+            left: 60%;
+            animation-delay: -8s;
+        }
+
+        @keyframes floatOrb {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(30px, -20px) scale(1.05);
+            }
+
+            66% {
+                transform: translate(-20px, 15px) scale(0.97);
+            }
+        }
+
+        /* Cuadrícula de puntos decorativos */
+        .dot-grid {
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+
+        /* ---- Contenedor principal ---- */
+        .login-wrapper {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        /* ---- Tarjeta de login ---- */
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            background: var(--login-card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--login-border);
+            border-radius: 24px;
+            padding: 48px 40px 40px;
+            box-shadow:
+                0 4px 32px rgba(0, 0, 0, 0.45),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(28px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ---- Logo / Branding ---- */
+        .login-brand {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        .login-brand-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--login-accent), var(--login-accent2));
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            box-shadow: 0 8px 24px rgba(79, 142, 247, 0.45);
+        }
+
+        .login-app-name {
+            font-size: 22px;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+
+        .login-app-sub {
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--login-muted);
+            margin-top: 3px;
+        }
+
+        /* ---- Título del form ---- */
+        .login-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--login-text);
+            margin-bottom: 26px;
+            text-align: center;
+        }
+
+        /* ---- Campos ---- */
+        .field {
+            margin-bottom: 16px;
+        }
+
+        .field label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--login-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 8px;
+        }
+
+        .field-wrap {
+            position: relative;
+        }
+
+        .field-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--login-muted);
+            pointer-events: none;
+            transition: color 0.25s;
+            display: flex;
+        }
+
+        .field-wrap input {
+            width: 100%;
+            padding: 13px 14px 13px 44px;
+            background: var(--login-input-bg);
+            border: 1px solid var(--login-input-border);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 14px;
+            font-family: var(--font);
+            outline: none;
+            transition: border-color 0.25s, box-shadow 0.25s;
+            caret-color: var(--login-accent);
+        }
+
+        .field-wrap input::placeholder {
+            color: rgba(255, 255, 255, 0.25);
+        }
+
+        .field-wrap input:focus {
+            border-color: var(--login-accent);
+            box-shadow: 0 0 0 3px var(--login-input-focus);
+        }
+
+        /* --- FIX PARA AUTOCOMPLETADO (Evitar fondo blanco en Chrome/Edge) --- */
+        .field-wrap input:-webkit-autofill,
+        .field-wrap input:-webkit-autofill:hover, 
+        .field-wrap input:-webkit-autofill:focus, 
+        .field-wrap input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 30px #0e1e4a inset !important;
+            -webkit-text-fill-color: #ffffff !important;
+            caret-color: var(--login-accent) !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+
+        .field-wrap input:focus+.field-icon-right,
+        .field-wrap:focus-within .field-icon {
+            color: var(--login-accent);
+        }
+
+        /* Toggle de contraseña */
+        .field-icon-right {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--login-muted);
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 4px;
+            border-radius: 6px;
+            display: flex;
+            transition: color 0.25s;
+        }
+
+        .field-icon-right:hover {
+            color: var(--login-accent);
+        }
+
+        /* ---- Recordarme ---- */
+        .remember-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .remember-row input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 1.5px solid var(--login-input-border);
+            border-radius: 5px;
+            background: var(--login-input-bg);
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .remember-row input[type="checkbox"]:checked {
+            background: linear-gradient(135deg, var(--login-accent), var(--login-accent2));
+            border-color: transparent;
+        }
+
+        .remember-row input[type="checkbox"]:checked::after {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 1px;
+            width: 7px;
+            height: 12px;
+            border: 2px solid white;
+            border-top: none;
+            border-left: none;
+            transform: rotate(43deg);
+        }
+
+        .remember-row label {
+            font-size: 13px;
+            color: var(--login-muted);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* ---- Botón ingresar ---- */
+        .btn-login-pro {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--login-accent) 0%, var(--login-accent2) 100%);
+            color: #fff;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: var(--font);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.25s;
+            box-shadow: 0 6px 22px rgba(79, 142, 247, 0.45);
+        }
+
+        .btn-login-pro::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--login-accent2), var(--login-accent));
+            opacity: 0;
+            transition: opacity 0.35s;
+        }
+
+        .btn-login-pro:hover::before {
+            opacity: 1;
+        }
+
+        .btn-login-pro span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-login-pro svg {
+            position: relative;
+            z-index: 1;
+            flex-shrink: 0;
+        }
+
+        .btn-login-pro:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(79, 142, 247, 0.55);
+        }
+
+        .btn-login-pro:active {
+            transform: translateY(1px);
+        }
+
+        /* Estado de carga */
+        .btn-login-pro.loading {
+            pointer-events: none;
+            opacity: 0.75;
+        }
+
+        /* ---- Error global ---- */
+        .login-error {
+            margin-top: 16px;
+            padding: 12px 16px;
+            background: rgba(231, 76, 60, 0.12);
+            border: 1px solid rgba(231, 76, 60, 0.3);
+            border-radius: 10px;
+            color: #fc8181;
+            font-size: 13px;
+            font-weight: 500;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .login-error:not(:empty) {
+            display: flex;
+        }
+
+        #loginError.active {
+            display: flex !important;
+        }
+
+        /* ---- Footer ---- */
+        .login-card-footer {
+            margin-top: 28px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--login-muted);
+        }
+
+        .login-card-footer a {
+            color: var(--login-accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-card-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Botón Engranaje Admin */
+        .admin-gear-btn {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.35);
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+        }
+
+        .admin-gear-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--login-accent);
+            transform: rotate(45deg) scale(1.05);
+            box-shadow: 0 0 15px rgba(79, 142, 247, 0.3);
+        }
+
+        /* ---- Badges de seguridad ---- */
+        .security-badges {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-top: 24px;
+        }
+
+        .badge {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 32px 20px 28px;
+            }
+            .login-app-name {
+                font-size: 19px;
+            }
+            .login-wrapper {
+                padding: 16px;
+                align-items: flex-start;
+                padding-top: 40px;
+            }
+            .security-badges {
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .login-card {
+                padding: 28px 16px 24px;
+                border-radius: 18px;
+            }
+            .security-badges {
+                flex-direction: column;
+                gap: 6px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Fondo animado -->
+    <div class="login-scene">
+        <div class="dot-grid"></div>
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Formulario -->
+    <div class="login-wrapper">
+        <div class="login-card">
+
+            <!-- Branding -->
+            <div class="login-brand">
+                <div class="login-brand-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                    </svg>
+                </div>
+                <div class="login-app-name">ServidorAPP</div>
+                <div class="login-app-sub">Gestor de Carpetas &amp; Archivos</div>
+            </div>
+
+            <!-- Botón Admin (Engranaje) -->
+            <button type="button" class="admin-gear-btn" id="adminGearBtn" title="Administración">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+            </button>
+
+
+
+            <form id="loginForm">
+
+                <!-- Usuario -->
+                <div class="field">
+                    <label for="username">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                        Usuario
+                    </label>
+                    <div class="field-wrap">
+                        <svg class="field-icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                        <input type="text" id="username" name="username" placeholder="Tu nombre de usuario"
+                            autocomplete="username" required>
+                    </div>
+                </div>
+
+                <!-- Contraseña -->
+                <div class="field">
+                    <label for="password">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                        Contraseña
+                    </label>
+                    <div class="field-wrap">
+                        <svg class="field-icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                        <input type="password" id="password" name="password" placeholder="••••••••"
+                            autocomplete="current-password" required>
+                        <button type="button" class="field-icon-right" id="togglePassword"
+                            aria-label="Mostrar contraseña">
+                            <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                <circle cx="12" cy="12" r="3" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recuérdame -->
+                <div class="remember-row">
+                    <input type="checkbox" id="rememberMe" name="rememberMe">
+                    <label for="rememberMe">Mantener sesión iniciada</label>
+                </div>
+
+                <!-- Botón -->
+                <button type="submit" class="btn-login-pro" id="loginBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                        <polyline points="10 17 15 12 10 7" />
+                        <line x1="15" y1="12" x2="3" y2="12" />
+                    </svg>
+                    <span>Ingresar</span>
+                </button>
+
+            </form>
+
+            <!-- Link de registro -->
+            <div class="login-card-footer">
+                ¿No tenés cuenta? <a href="register.html">Registrate aquí</a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Pie de página fijo: autor + badges de seguridad -->
+    <div style="position:fixed; bottom:20px; left:0; right:0; z-index:20; text-align:center;">
+        <!-- Autor -->
+        <p style="font-size:12px; color:rgba(255,255,255,0.35); margin-bottom:10px; letter-spacing:0.3px;">
+            Desarrollado por <strong style="color:rgba(255,255,255,0.55); font-weight:600;">Alejandro Bajuk</strong>
+        </p>
+        <!-- Badges de seguridad -->
+        <div class="security-badges">
+            <div class="badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                Conexión cifrada
+            </div>
+            <div class="badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+                Autenticación JWT
+            </div>
+            <div class="badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 11 12 14 22 4" />
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                </svg>
+                Acceso privado
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Personalizado (Estructura Anidada Profesional) -->
+    <div id="modalOverlay" class="modal-overlay">
+        <div id="customModal" class="custom-modal">
+            <div class="modal-content">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div id="modalIcon" class="modal-icon"></div>
+                <h2 id="modalTitle" class="modal-title">Mensaje</h2>
+                <div id="modalMessage" class="modal-message"></div>
+                <div class="modal-actions">
+                    <button id="modalButton" class="btn btn-primary" onclick="closeModal()">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts Modulares -->
+    <script src="js/icons.js?v=23"></script>
+    <script src="js/app.js?v=23"></script>
+    <script src="js/auth.js?v=23"></script>
+    <script src="js/admin.js?v=23"></script>
+
+    <script>
+        // Configuración de la página de Login
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof setupPasswordToggle === 'function') {
+                setupPasswordToggle('togglePassword', 'password', 'eyeIcon');
+            }
+            if (typeof setupLoginForm === 'function') {
+                setupLoginForm();
+            }
+            if (typeof setupAdminLogic === 'function') {
+                setupAdminLogic();
+            }
+        });
+
+        // Interceptores de UI
+        function showError(message) {
+            const btn = document.getElementById('loginBtn');
+            if (btn) {
+                btn.classList.remove('loading');
+                btn.querySelector('span').textContent = 'Ingresar';
+            }
+            if (typeof showModal === 'function') {
+                showModal(message, 'error', 'Error de inicio de sesión');
+            }
+        }
+    </script>
+</body>
+</html>

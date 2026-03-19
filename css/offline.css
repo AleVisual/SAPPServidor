@@ -1,0 +1,260 @@
+/* ============================================================
+   ServidorAPP - PANTALLA OFFLINE (ERROR 404/503)
+   ============================================================ */
+
+:root {
+    --bg-dark: #070b19;
+    --card-bg: rgba(20, 25, 45, 0.7);
+    --border-color: rgba(255, 71, 87, 0.2);
+    --accent-red: #ff4757;
+    --accent-red-glow: rgba(255, 71, 87, 0.3);
+    --text-main: #ffffff;
+    --text-muted: rgba(255, 255, 255, 0.6);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background: radial-gradient(circle at center, #10152b 0%, var(--bg-dark) 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-main);
+    overflow: hidden;
+}
+
+/* Container & Card */
+.offline-container {
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+    z-index: 10;
+}
+
+.offline-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    padding: 50px 40px;
+    text-align: center;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+    animation: slideUp 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Logo */
+.logo-wrapper {
+    margin-bottom: 30px;
+}
+
+.app-logo {
+    width: 65px;
+    height: auto;
+    filter: drop-shadow(0 0 10px rgba(255,255,255,0.1));
+    animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+/* ANIMACIÓN CSS DE DESCONEXIÓN */
+.animation-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 35px;
+}
+
+.server-box, .cloud-box {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+.server-led {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-red);
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    box-shadow: 0 0 10px var(--accent-red-glow);
+}
+
+.blink-red {
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+.server-line {
+    width: 30px;
+    height: 4px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 2px;
+    margin: 4px 0;
+}
+
+.connection-path {
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, rgba(255,71,87,0.5) 50%, rgba(255,255,255,0.1) 100%);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.broken-link {
+    background: var(--bg-dark);
+    color: var(--accent-red);
+    font-weight: 800;
+    font-size: 14px;
+    padding: 4px;
+    border: 1px solid var(--accent-red);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 15px var(--accent-red-glow);
+    animation: breakPulse 2s infinite;
+}
+
+@keyframes breakPulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 10px var(--accent-red-glow); }
+    50% { transform: scale(1.1); box-shadow: 0 0 20px var(--accent-red); }
+}
+
+.cloud-box {
+    color: rgba(255,255,255,0.4);
+}
+
+/* Badge Error 404 */
+.error-badge {
+    display: inline-block;
+    background: rgba(255, 71, 87, 0.15);
+    color: var(--accent-red);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    border: 1px solid rgba(255, 71, 87, 0.3);
+    margin-bottom: 20px;
+}
+
+/* Textos */
+.offline-title {
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: 15px;
+    letter-spacing: -0.5px;
+}
+
+.offline-description {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+/* Indicador de estado */
+.status-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 25px;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ffa502;
+    box-shadow: 0 0 8px rgba(255, 165, 2, 0.4);
+    animation: blinkYellow 1.5s infinite;
+}
+
+@keyframes blinkYellow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+.status-dot.success {
+    background: #2ecc71;
+    box-shadow: 0 0 12px rgba(46, 204, 113, 0.6);
+    animation: none;
+}
+
+/* Botón Detectar */
+.btn-detect {
+    width: 100%;
+    background: linear-gradient(135deg, #4f8ef7 0%, #3b6bcc 100%);
+    color: #fff;
+    border: none;
+    padding: 16px;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(79, 142, 247, 0.3);
+}
+
+.btn-detect:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(79, 142, 247, 0.4);
+}
+
+.btn-detect:active {
+    transform: translateY(1px);
+}
+
+.btn-detect.loading {
+    background: #3b6bcc;
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+.btn-detect.loading svg {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}

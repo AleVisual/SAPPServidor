@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServidorAPP - Gestor de Carpetas</title>
+    <link rel="icon" href="assets/icono.png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/modals.css">
+    <link rel="stylesheet" href="css/previews.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/imageViewer.css?v=22">
+    <!-- Módulo Sensor de Inactividad -->
+    <link rel="stylesheet" href="css/inactivity.css">
+
+    <!-- Quill.js - Rich Text Editor dependencias -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+</head>
+
+<body class="dashboard-page">
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-left">
+                <div class="logo-small">
+                    <span>SA</span>
+                </div>
+                <h1 class="app-title">Gestor de Carpetas</h1>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <div class="profile-avatar-small" id="headerAvatar" onclick="window.location.href='Perfil.html'" style="cursor: pointer;">
+                        <img id="userAvatarImg" src="assets/default-avatar.png" alt="Profile" 
+                             style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                    </div>
+                    <span class="user-name" id="userName">Usuario</span>
+                    <button class="btn-logout" onclick="logout()">Cerrar Sesión</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="dashboard-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <nav class="sidebar-menu">
+                    <h3 class="menu-title">Navegación</h3>
+                    <ul>
+                        <li class="menu-item active" onclick="switchTab('folders')">
+                            <span class="menu-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path
+                                        d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z">
+                                    </path>
+                                </svg>
+                            </span>
+                            <span class="menu-text">Mis Carpetas</span>
+                        </li>
+                        <li class="menu-item" onclick="switchTab('files')">
+                            <span class="menu-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                                    <polyline points="13 2 13 9 20 9"></polyline>
+                                </svg>
+                            </span>
+                            <span class="menu-text">Archivos</span>
+                        </li>
+                        <li class="menu-item" onclick="switchTab('settings')">
+                            <span class="menu-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <path
+                                        d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M4.22 19.78l4.24-4.24m4.24-4.24l4.24-4.24">
+                                    </path>
+                                </svg>
+                            </span>
+                            <span class="menu-text">Configuración</span>
+                        </li>
+                    </ul>
+                </nav>
+
+                <!-- Footer del Sidebar -->
+                <div class="sidebar-footer">
+                    <div class="sidebar-footer-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                        </svg>
+                    </div>
+                    <div class="sidebar-footer-info">
+                        <span class="sidebar-footer-label">Desarrollado por</span>
+                        <span class="sidebar-footer-name">Alejandro Bajuk</span>
+                        <span class="sidebar-footer-version">Versión 3.3.0</span>
+                    </div>
+                </div>
+
+            </aside>
+
+            <!-- Main Panel -->
+            <main class="main-panel">
+                <!-- Folders Tab -->
+                <section id="foldersTab" class="tab-content active">
+                    <div class="section-header">
+                        <h2>Mi Carpeta Asignada</h2>
+                    </div>
+
+                    <div class="folders-container" id="foldersContainer">
+                        <div class="loading">Cargando información...</div>
+                    </div>
+                </section>
+
+                <!-- Files Tab -->
+                <section id="filesTab" class="tab-content">
+                    <div class="section-header">
+                        <h2>Archivos en mi Carpeta</h2>
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" onclick="triggerFileUpload()">
+                                <span class="btn-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="17 8 12 3 7 8"></polyline>
+                                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                                    </svg>
+                                </span> Subir Archivo
+                            </button>
+                            <button class="btn btn-secondary" onclick="showCreateFolderDialog()">
+                                <span class="btn-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path
+                                            d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z">
+                                        </path>
+                                    </svg>
+                                </span> Nueva Carpeta
+                            </button>
+                        </div>
+                    </div>
+
+                    <input type="file" id="fileUploadInput" style="display: none;" multiple
+                        onchange="handleFileUpload(event)">
+
+                    <div class="files-container" id="filesContainer">
+                        <div class="loading">Cargando archivos...</div>
+                    </div>
+                </section>
+
+                <!-- Settings Tab -->
+                <section id="settingsTab" class="tab-content">
+                    <div class="section-header">
+                        <h2>Configuración de Cuenta</h2>
+                    </div>
+
+                    <div class="settings-grid">
+                        <!-- Perfil / Información -->
+                        <div class="setting-card profile-card">
+                            <div class="card-header-inner">
+                                <div class="profile-avatar">
+                                    <span id="avatarLetter">U</span>
+                                </div>
+                                <div class="profile-info">
+                                    <h3 id="accountUsernameDisplay">Usuario</h3>
+                                    <p class="profile-role">Miembro del Servidor</p>
+                                </div>
+                            </div>
+                            
+                            <div class="card-body">
+                                <div class="info-item">
+                                    <span class="info-icon">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                    </span>
+                                    <div class="info-details">
+                                        <label>Nombre de Usuario</label>
+                                        <span id="accountUsername">-</span>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-icon">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                    </span>
+                                    <div class="info-details">
+                                        <label>Última Conexión</label>
+                                        <span id="lastLogin">-</span>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-icon">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                                    </span>
+                                    <div class="info-details">
+                                        <label>Estado de Cuenta</label>
+                                        <span class="status-badge">Activa</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cambio de Contraseña -->
+                        <div class="setting-card password-card">
+                            <div class="card-header-inner">
+                                <h3>Seguridad y Acceso</h3>
+                                <p>Actualiza tus credenciales para mantener tu cuenta protegida.</p>
+                            </div>
+                            
+                            <form id="changePasswordForm" class="settings-form">
+                                <input type="text" name="username" style="display:none" autocomplete="username">
+                                
+                                <div class="form-group-custom">
+                                    <label for="currentPassword">Contraseña Actual</label>
+                                    <div class="input-with-icon">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                        <input type="password" id="currentPassword" placeholder="Contraseña actual" autocomplete="current-password" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group-custom">
+                                        <label for="newPassword">Nueva Contraseña</label>
+                                        <div class="input-with-icon">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3L15.5 7.5z"></path></svg>
+                                            <input type="password" id="newPassword" placeholder="Nueva" autocomplete="new-password" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group-custom">
+                                        <label for="confirmNewPassword">Confirmar Nueva</label>
+                                        <div class="input-with-icon">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                            <input type="password" id="confirmNewPassword" placeholder="Repetir" autocomplete="new-password" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn-primary btn-full-width">
+                                    <span class="btn-text">Actualizar Contraseña</span>
+                                    <span class="btn-icon">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                                    </span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal Personalizado (Estructura Anidada PRO) -->
+    <div id="modalOverlay" class="modal-overlay">
+        <div id="customModal" class="custom-modal">
+            <div class="modal-content">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div id="modalIcon" class="modal-icon"></div>
+                <h2 id="modalTitle" class="modal-title">Mensaje</h2>
+                <div id="modalMessage" class="modal-message"></div>
+                <div class="modal-actions">
+                    <button id="modalButton" class="btn btn-primary">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Vista Previa de Archivos (Estructura Anidada SAPP) -->
+    <div id="previewModalOverlay" class="preview-overlay">
+        <div id="previewModal" class="preview-modal">
+            <div class="preview-header">
+                <div class="preview-header-left">
+                    <span id="previewFileIcon" class="preview-file-icon"></span>
+                    <h3 id="previewFileName" class="preview-title">Vista Previa</h3>
+                </div>
+                <div class="preview-header-right">
+                    <button id="previewDownloadBtn" class="btn-preview-action">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Descargar
+                    </button>
+                    <button id="previewDeleteBtn" class="btn-preview-delete">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                        Eliminar
+                    </button>
+                    <button id="previewOpenDesktopBtn" class="btn-preview-action" style="display:none;"
+                        onclick="openInDesktop()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                            <polyline points="10 17 15 12 10 7"></polyline>
+                            <line x1="15" y1="12" x2="3" y2="12"></line>
+                        </svg>
+                        Abrir Escritorio
+                    </button>
+                    <button id="previewEditBtn" class="btn-preview-action" style="display:none;"
+                        onclick="enterEditMode()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                        Editar
+                    </button>
+                    <button id="previewSaveBtn" class="btn-preview-action btn-preview-save" style="display:none;"
+                        onclick="saveCurrentFile()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                            <polyline points="7 3 7 8 15 8"></polyline>
+                        </svg>
+                        Guardar
+                    </button>
+                    <button id="previewCancelBtn" class="btn-preview-action btn-preview-cancel" style="display:none;"
+                        onclick="closePreviewModal()">
+                        Cancelar
+                    </button>
+                    <button class="btn-preview-close" onclick="closePreviewModal()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div id="previewBody" class="preview-body">
+                <div class="preview-loading">
+                    <div class="spinner"></div>
+                    <p>Cargando...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Visualizador de Imágenes Premium (Independiente) -->
+    <div id="imageViewerOverlay" class="image-viewer-overlay">
+        <div class="iv-header">
+            <span id="ivFileName">imagen.jpg</span>
+            <div class="iv-actions">
+                <button title="Zoom (+)" onclick="ivZoomIn()">+</button>
+                <button title="Zoom (-)" onclick="ivZoomOut()">-</button>
+                <button title="Restaurar" onclick="ivResetZoom()">1:1</button>
+                <button title="Descargar" onclick="ivDownload()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                </button>
+                <button class="iv-close" onclick="closeImageViewer()">×</button>
+            </div>
+        </div>
+        <div class="iv-body">
+            <img id="ivImage" src="" alt="Imagen" draggable="false">
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/icons.js?v=22"></script>
+    <script src="js/app.js?v=22"></script>
+    <script src="js/auth.js?v=22"></script>
+    <script src="js/dashboard.js?v=22"></script>
+    <script src="js/files.js?v=22"></script>
+    <script src="js/preview.js?v=22"></script>
+    <script src="js/Copy.js?v=22"></script>
+    <script src="js/imageViewer.js?v=22"></script>
+    <!-- Sensor de Inactividad -->
+    <script src="js/inactivity.js?v=1"></script>
+</body>
+
+</html>

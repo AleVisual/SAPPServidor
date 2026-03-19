@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SApp Editor Pro</title>
+    <link rel="icon" href="assets/icono.png" type="image/png">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Quill.js for Rich Text Editing -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <style>
+        :root {
+            --sap-primary: #4f8ef7;
+            --sap-primary-hover: #3b7ad9;
+            --sap-bg: #0f172a;
+            --sap-surface: #1e293b;
+            --sap-surface-light: #334155;
+            --sap-text: #f8fafc;
+            --sap-text-muted: #94a3b8;
+            --sap-border: #334155;
+            --sap-success: #10b981;
+            --sap-error: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--sap-bg);
+            color: var(--sap-text);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Top Bar */
+        .editor-header {
+            background-color: var(--sap-surface);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--sap-border);
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .app-logo {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--sap-primary), #a855f7);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .file-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .file-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--sap-text);
+        }
+
+        .file-path {
+            font-size: 0.75rem;
+            color: var(--sap-text-muted);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--sap-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--sap-primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background-color: var(--sap-surface-light);
+            color: var(--sap-text);
+        }
+
+        .btn-secondary:hover {
+            background-color: #475569;
+        }
+
+        /* Editor Container */
+        .editor-main {
+            flex: 1;
+            position: relative;
+            background-color: var(--sap-bg); /* Dark bg for contrast with white sheet */
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #textEditor {
+            width: 100%;
+            height: 100%;
+            border: none;
+            padding: 2rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            line-height: 1.6;
+            resize: none;
+            outline: none;
+            background-color: #ffffff !important;
+            color: #1e293b !important;
+            display: none;
+            overflow-y: auto;
+        }
+
+        #richEditor {
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ql-toolbar.ql-snow {
+            background-color: var(--sap-surface);
+            border: none !important;
+            border-bottom: 1px solid var(--sap-border) !important;
+            flex-shrink: 0;
+        }
+
+        .ql-container.ql-snow {
+            border: none !important;
+            font-family: 'Inter', sans-serif !important;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .ql-editor {
+            padding: 4rem 4rem !important;
+            max-width: 900px;
+            margin: 20px auto !important;
+            background: white !important; /* Paper background */
+            color: #1e293b !important; /* DARK TEXT FOR VISIBILITY on white paper */
+            min-height: calc(100% - 40px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            border-radius: 4px;
+            overflow-y: auto !important;
+            line-height: 1.6 !important;
+        }
+
+        /* Scrollbar PRO for editor */
+        .ql-editor::-webkit-scrollbar,
+        #textEditor::-webkit-scrollbar {
+            width: 10px;
+        }
+        .ql-editor::-webkit-scrollbar-track,
+        #textEditor::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+        }
+        .ql-editor::-webkit-scrollbar-thumb,
+        #textEditor::-webkit-scrollbar-thumb {
+            background: var(--sap-primary);
+            border-radius: 5px;
+            border: 2px solid #fff;
+        }
+
+        /* Toolbar active icon colors */
+        .ql-snow .ql-stroke { stroke: var(--sap-text-muted) !important; }
+        .ql-snow .ql-fill { fill: var(--sap-text-muted) !important; }
+        .ql-snow .ql-picker { color: var(--sap-text-muted) !important; }
+        
+        .ql-snow.ql-toolbar button:hover .ql-stroke, 
+        .ql-snow.ql-toolbar button:hover .ql-fill {
+            stroke: var(--sap-primary) !important;
+        }
+
+        /* Loading Overlay */
+        #loadingOverlay {
+            position: fixed;
+            inset: 0;
+            background-color: var(--sap-bg);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top: 4px solid var(--sap-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background-color: var(--sap-surface);
+            padding: 0.75rem 1.5rem;
+            border-radius: 99px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 2000;
+            border: 1px solid var(--sap-border);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast-success { border-color: var(--sap-success); }
+        .toast-error { border-color: var(--sap-error); }
+    </style>
+</head>
+<body>
+
+    <header class="editor-header">
+        <div class="header-left">
+            <div class="app-logo">SA</div>
+            <div class="file-info">
+                <span id="fileNameDisplay" class="file-name">Cargando...</span>
+                <span id="filePathDisplay" class="file-path">/</span>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <button id="saveBtn" class="btn btn-primary" onclick="saveFile()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                    <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                    <polyline points="7 3 7 8 15 8"></polyline>
+                </svg>
+                Guardar
+            </button>
+            <button class="btn btn-secondary" onclick="window.close()">
+                Cerrar
+            </button>
+        </div>
+    </header>
+
+    <main class="editor-main">
+        <!-- Markdown/Plain Text Editor -->
+        <textarea id="textEditor" spellcheck="false"></textarea>
+        <!-- Rich Text Editor (HTML) -->
+        <div id="richEditor"></div>
+    </main>
+
+    <div id="loadingOverlay">
+        <div class="spinner"></div>
+        <p id="loadingText">Preparando entorno de edición segura...</p>
+    </div>
+
+    <div id="toast" class="toast">
+        <span id="toastIcon"></span>
+        <span id="toastMessage"></span>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <script src="js/editor.js?v=2.1"></script>
+
+</body>
+</html>
