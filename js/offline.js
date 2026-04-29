@@ -2,7 +2,7 @@
    ServidorAPP - LÓGICA DE RECONEXIÓN (OFFLINE)
    ============================================================ */
 
-const API_URL = 'https://vernon-specifics-verified-scales.trycloudflare.com';
+const API_URL = 'https://instruments-department-certification-indication.trycloudflare.com';
 
 document.addEventListener('DOMContentLoaded', () => {
     const btnDetect = document.getElementById('btnDetect');
