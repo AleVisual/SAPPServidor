@@ -3,7 +3,7 @@
    ============================================================ */
 
 // 1. Configuración Global
-const API_URL = 'https://applied-representation-helicopter-montana.trycloudflare.com'; //Siempre colocar la URL de Cloudflared
+const API_URL = 'https://affairs-wine-placing-conservative.trycloudflare.com'; //Siempre colocar la URL de Cloudflared
 const TOKEN_KEY = 'auth_token';
 const USER_KEY = 'user_info';
 
