@@ -2,7 +2,7 @@
    ServidorAPP - LÓGICA DE RECONEXIÓN (OFFLINE)
    ============================================================ */
 
-const API_URL = 'https://applied-representation-helicopter-montana.trycloudflare.com';
+const API_URL = 'https://affairs-wine-placing-conservative.trycloudflare.com';
 
 document.addEventListener('DOMContentLoaded', () => {
     const btnDetect = document.getElementById('btnDetect');
